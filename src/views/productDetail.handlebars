@@ -8,12 +8,57 @@
 </head>
 <body>
   <h1>{{product.Titulo}}</h1>
-  <p><strong>Descripción:</strong> {{product.description}}</p>
+  <p><strong>Descripcion:</strong> {{product.description}}</p>
   <p><strong>Coodigo:</strong> {{product.code}}</p>
   <p><strong>Precio:</strong> ${{product.price}}</p>
   <p><strong>Stock:</strong> {{product.stock}}</p>
   <p><strong>Categoría:</strong> {{product.category}}</p>
-  <a href="/api/carts/add/{{product._id}}">Agregar al carrito</a> 
+  
+  <form id="add-to-cart-form" action="/api/carts/add/{{product._id}}" method="post">
+    <label for="quantity">Cantidad:</label>
+    <input type="number" id="quantity" name="quantity" min="1" max="{{product.stock}}" required>
+    <button type="submit">Agregar al carrito</button>
+  </form>
+
   <a href="/products">Volver</a> 
+  <a href="/cart/">Ver carrito</a>
+
+  <script>
+    document.getElementById('add-to-cart-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const quantity = parseInt(document.getElementById('quantity').value, 10);
+    console.log('Cantidad seleccionada:', quantity);
+    const productId = '{{product._id}}';
+    const url = this.action;
+
+    if (isNaN(quantity) || quantity <= 0) {
+        alert('Cantidad no valida');
+        return;
+    }
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ quantity })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Producto agregado');
+        } else {
+            alert(`Error: ${data.message}`);
+        }
+    })
+    .catch(error => {
+        alert('Error');
+    });
+});
+
+  
+
+  </script>
 </body>
 </html>

@@ -10,19 +10,22 @@
   <h1>Lista de Productos</h1>
 
   <form method="get" action="/products">
+    <label for="query">Categoría:</label>
+    <input type="text" name="query" id="query" value="{{query}}" placeholder="Ingresa la categoría">
+
     <label for="sort">Ordenar por precio:</label>
     <select name="sort" id="sort">
       <option value="">Seleccionar</option>
-      <option value="asc" {{#if isAscSelected}}selected{{/if}}>Menor</option>
-      <option value="desc" {{#if isDescSelected}}selected{{/if}}>Mayor</option>
+      <option value="asc" {{#if isMenor}}selected{{/if}}>Menor</option>
+      <option value="desc" {{#if isMayor}}selected{{/if}}>Mayor</option>
     </select>
-    
+
     <label for="minPrice">Precio mínimo:</label>
     <input type="number" name="minPrice" id="minPrice" value="{{minPrice}}">
-    
+
     <label for="maxPrice">Precio máximo:</label>
     <input type="number" name="maxPrice" id="maxPrice" value="{{maxPrice}}">
-    
+
     <button type="submit">Filtrar</button>
   </form>
 
@@ -51,8 +54,11 @@
       <a href="/products?page={{nextPage}}&limit={{limit}}&sort={{sort}}&query={{query}}&minPrice={{minPrice}}&maxPrice={{maxPrice}}">Siguiente</a>
     {{/if}}
   </div>
-<div>
-   <a href="/cart/20">Ver Detalles</a>
- </div>
+  
+  <br>
+  <div class="card">
+    <a href="/cart">Ver carrito</a>
+  </div>
+
 </body>
 </html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/style.css">
+  <title>Carrito de Compras</title>
+</head>
+<body>
+  <h1>Carrito de Compras</h1>
+  <div id="products-container">
+    {{#each cart.products}}
+      <div class="card">
+        <h2>{{this.product.Titulo}}</h2>
+        <p><strong>Cantidad:</strong> {{this.quantity}}</p>
+        <p><strong>Precio:</strong> ${{this.product.price}}</p>
+        <button class="delete-product" data-product-id="{{this.product._id}}">Eliminar</button>
+      </div>
+    {{/each}}
+  </div>
+  <button id="empty-cart">Vaciar Carrito</button>
+  <a href="/products">Volver a Productos</a>
+
+  <script>
+   document.querySelectorAll('.delete-product').forEach(button => {
+    button.addEventListener('click', function() {
+        const productId = this.dataset.productId;
+        fetch(`/api/carts/remove/${productId}`, {
+            method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Producto eliminado');
+                location.reload();
+            } else {
+                alert(`Error: ${data.message}`);
+            }
+        })
+        .catch(error => {
+            console.error(`Error al intentar eliminar el producto: ${error}`);
+            alert('Error Product');
+        });
+    });
+});
+
+
+    document.getElementById('empty-cart').addEventListener('click', function() {
+      fetch('/api/carts/empty', {
+        method: 'DELETE',
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Carrito vacio');
+          location.reload();
+        } else {
+          alert(`Error: ${data.message}`);
+        }
+      })
+      .catch(error => {
+        alert('Problema al vaciar todo el carrito');
+      });
+    });
+  </script>
+</body>
+</html>
